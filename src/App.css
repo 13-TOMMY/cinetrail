@@ -26,3 +26,6 @@ a{
 body{
   background-color: var(--dark-bg);
 }
+button{
+  border: none;
+}
