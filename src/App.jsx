@@ -1,25 +1,28 @@
-import { useState } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import ThemeContextProvider from './context/ThemeContext';
-import Header from './components/Header/Header';
-import Homepage from './pages/Homepage/Homepage';
-import './App.css'
+import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Homepage from "./pages/Homepage";
+import MovieDetails from "./pages/MovieDetails";
+import ThemeContextProvider from "./contexts/ThemeContext";
 
 function App() {
-
-  const apiKey = import.meta.env.VITE_API_KEY;
-  const baseUrl = import.meta.env.VITE_API_URL;
-
   return (
-    <BrowserRouter>
-      <ThemeContextProvider>
-      <Header />
-        <Routes>
-          <Route path='/' element={<Homepage apiKey={apiKey} baseUrl={baseUrl}/>} />
-        </Routes>
-      </ThemeContextProvider>
-    </BrowserRouter>
-  )
+    <>
+      <BrowserRouter>
+        <ThemeContextProvider>
+          <Header />
+          <Routes>
+            <Route path={"/"} element={<Homepage />} />
+            <Route path={"/movieDetails/:movieId"} element={<MovieDetails />} />
+            <Route path={"*"} element={<Homepage />} />
+          </Routes>
+          <Footer />
+        </ThemeContextProvider>
+      </BrowserRouter>
+    </>
+  );
 }
 
-export default App
+export default App;
