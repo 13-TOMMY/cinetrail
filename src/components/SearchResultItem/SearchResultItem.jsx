@@ -12,12 +12,10 @@ export default function SearchResultItem({ movie, setQuery }) {
       <img
         src={
           movie?.backdrop_path
-            ? `${import.meta.env.VITE_API_BASE_IMAGE_URL}${
-                movie?.backdrop_path
-              }`
+            ? `${import.meta.env.VITE_API_BASE_IMAGE_URL}${movie.backdrop_path}`
             : noImage
         }
-        alt={movie?.title}
+        alt=""
       />
       <p>{movie?.title}</p>
     </Link>

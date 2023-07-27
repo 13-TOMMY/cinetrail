@@ -12,7 +12,7 @@ export default function Homepage() {
   const { darkMode, setDarkMode } = useContext(ThemeContext);
 
   return (
-    <div className={`homepage-container ${!darkMode ? "home-light" : ""} `}>
+    <div className={`homepage-container ${!darkMode && "home-light"}`}>
       <Slider />
       <div className="movies-wrapper">
         <PopularMovies />

@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { ThemeContext } from "../contexts/ThemeContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 
-import SearchResultItem from "./SearchResultItem/SearchResultItem";
-
 import "./Header.css";
+import SearchResultItem from "./SearchResultItem/SearchResultItem";
 
 function Header() {
   const { darkMode, setDarkMode } = useContext(ThemeContext);
@@ -24,10 +23,9 @@ function Header() {
       .catch((err) => console.log(err));
   }, [query]);
 
-  //https://api.themoviedb.org/3/search/movie
-
   const toggleMode = () => {
     setDarkMode((prevState) => !prevState);
+    localStorage.setItem("darkMode", !darkMode);
   };
 
   const getUserQuery = (e) => {
@@ -35,7 +33,7 @@ function Header() {
   };
 
   return (
-    <div className={`header-container ${!darkMode ? "header-light" : ""}`}>
+    <div className={`header-container ${!darkMode && "header-light"}`}>
       <Link className="logo" to="/">
         CineTrail
       </Link>
@@ -46,11 +44,11 @@ function Header() {
           placeholder="Search movies..."
           onChange={getUserQuery}
         />
-        {query.trim() !== "" && (
+        {query.trim() && (
           <div className="search-results-container">
             {searchResults.map((result) => (
               <SearchResultItem
-                key={result.id}
+                key={result?.id}
                 movie={result}
                 setQuery={setQuery}
               />
@@ -62,11 +60,11 @@ function Header() {
         <div className="theme-buttons-container">
           <div className="theme-buttons">
             <MdOutlineLightMode
-              className={`theme-icon ${!darkMode ? "theme-icon-active" : ""}`}
+              className={`theme-icon ${!darkMode && "theme-icon-active"} `}
               onClick={darkMode ? toggleMode : undefined}
             />
             <MdOutlineDarkMode
-              className={`theme-icon  ${darkMode ? "theme-icon-active" : ""}`}
+              className={`theme-icon ${darkMode && "theme-icon-active"}`}
               onClick={!darkMode ? toggleMode : undefined}
             />
           </div>
