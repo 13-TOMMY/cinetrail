@@ -81,9 +81,7 @@ export default function Signup() {
             <p className="success-message">You signed up successfully!</p>
           ) : message ? (
             <p>{message}</p>
-          ) : (
-            <p>Something went wrong, try again later</p>
-          )}
+          ) : null }
         </div>
       </form>
     </div>
