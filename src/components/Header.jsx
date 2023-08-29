@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { ThemeContext } from "../contexts/ThemeContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 
 import "./Header.css";
@@ -9,7 +9,7 @@ import SearchResultItem from "./SearchResultItem/SearchResultItem";
 
 function Header() {
   const { darkMode, setDarkMode } = useContext(ThemeContext);
-
+  const navigate = useNavigate;
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
@@ -70,7 +70,7 @@ function Header() {
           </div>
         </div>
         <div>
-          <button className="create-account-btn">Create an Account</button>
+          <button className="create-account-btn" onClick={() => navigate('/signup')}>Create an Account</button>
         </div>
       </div>
     </div>

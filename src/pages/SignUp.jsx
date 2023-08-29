@@ -2,12 +2,14 @@ import React, { useState, useTransition } from "react";
 import axios from "axios";
 
 import "./users.css";
+import { useNavigate } from "react-router-dom";
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [signupSuccess, setSignupSuccess] = useState(false);
   const [message, setMessage] = useState("");
+  const navigate = useNavigate()
   const handleSignup = (e) => {
     e.preventDefault();
     axios
@@ -25,11 +27,14 @@ export default function Signup() {
           setEmail("");
           setUsername("");
           setPassword("");
+          navigate("/");
         }
       })
       .catch((err) => console.log(err));
   };
-
+  const handleCancel = () => {
+    navigate("/");
+  };
   return (
     <div className="signup-container">
       <form className="signup-form" onSubmit={handleSignup}>
@@ -70,7 +75,7 @@ export default function Signup() {
             required
           />
           <div className="button-container">
-            <button type="reset" className="cancelbtn">
+            <button type="reset" className="cancelbtn" onClick={handleCancel}>
               Cancel
             </button>
             <button type="submit" className="signupbtn">
