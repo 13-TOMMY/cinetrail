@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import axios from "axios";
-import "./users.css";
 
-export default function Signin() {
+import "./SignUp.css";
+import { useNavigate } from "react-router-dom";
+export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [signupSuccess, setSignupSuccess] = useState(false);
   const [message, setMessage] = useState("");
+  const navigate = useNavigate()
   const handleSignup = (e) => {
     e.preventDefault();
     axios
@@ -19,15 +21,19 @@ export default function Signin() {
       .then((res) => {
         console.log(res);
         if (res.data.status === 409) {
-          setMessage("sorry, this email is already in use!");
+          setMessage("Sorry, this email is already in use!");
         } else {
           setSignupSuccess(true);
           setEmail("");
           setUsername("");
           setPassword("");
+          navigate("/");
         }
       })
       .catch((err) => console.log(err));
+  };
+  const handleCancel = () => {
+    navigate("/");
   };
   return (
     <div className="signup-container">
@@ -69,7 +75,7 @@ export default function Signin() {
             required
           />
           <div className="button-container">
-            <button type="reset" className="cancelbtn">
+            <button type="reset" className="cancelbtn" onClick={handleCancel}>
               Cancel
             </button>
             <button type="submit" className="signupbtn">
@@ -80,9 +86,7 @@ export default function Signin() {
             <p className="success-message">You signed up successfully!</p>
           ) : message ? (
             <p>{message}</p>
-          ) : (
-            <p>Something went wrong, try again later</p>
-          )}
+          ) : null }
         </div>
       </form>
     </div>

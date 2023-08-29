@@ -1,15 +1,17 @@
-import React, { useState, useTransition } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import "./signIn.css";
+import { ThemeContext } from '../../contexts/ThemeContext';
+import { UserContext } from '../../contexts/UserContext';
 
-import "./users.css";
-import { useNavigate } from "react-router-dom";
-export default function Signup() {
+export default function Signin() {
+  const navigate = useNavigate();
+  const { user, setUser, token, setToken } = useContext(UserContext);
+  const { darkMode, setDarkMode } = useContext(ThemeContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
-  const [signupSuccess, setSignupSuccess] = useState(false);
-  const [message, setMessage] = useState("");
-  const navigate = useNavigate()
+
   const handleSignup = (e) => {
     e.preventDefault();
     axios
@@ -21,19 +23,15 @@ export default function Signup() {
       .then((res) => {
         console.log(res);
         if (res.data.status === 409) {
-          setMessage("Sorry, this email is already in use!");
+          setMessage("sorry, this email is already in use!");
         } else {
           setSignupSuccess(true);
           setEmail("");
           setUsername("");
           setPassword("");
-          navigate("/");
         }
       })
       .catch((err) => console.log(err));
-  };
-  const handleCancel = () => {
-    navigate("/");
   };
   return (
     <div className="signup-container">
@@ -75,7 +73,7 @@ export default function Signup() {
             required
           />
           <div className="button-container">
-            <button type="reset" className="cancelbtn" onClick={handleCancel}>
+            <button type="reset" className="cancelbtn">
               Cancel
             </button>
             <button type="submit" className="signupbtn">
@@ -86,7 +84,9 @@ export default function Signup() {
             <p className="success-message">You signed up successfully!</p>
           ) : message ? (
             <p>{message}</p>
-          ) : null }
+          ) : (
+            <p>Something went wrong, try again later</p>
+          )}
         </div>
       </form>
     </div>
