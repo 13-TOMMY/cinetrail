@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import "./signIn.css";
+import "./SignIn.css";
 import { ThemeContext } from '../../contexts/ThemeContext';
 import { UserContext } from '../../contexts/UserContext';
 
@@ -12,7 +12,7 @@ export default function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignup = (e) => {
+  const handleSignin = (e) => {
     e.preventDefault();
     axios
       .post("https://cinetrail-server.herokuapp.com/users/signup", {
