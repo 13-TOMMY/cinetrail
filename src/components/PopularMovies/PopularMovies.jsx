@@ -32,7 +32,7 @@ export default function PopularMovies() {
             cardStyle="popular-card"
             radius={"16px"}
             imgSrc={movie?.poster_path}
-            id={movie.id}
+            id={movie?.id}
           />
         ))}
       </div>

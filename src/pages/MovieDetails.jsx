@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import axios from "axios";
-
 import ReactPlayer from "react-player";
 import StarRatings from "react-star-ratings";
-
 import { useParams } from "react-router-dom";
 import Genres from "../components/Genres/Genres";
 import ReviewItem from "../components/ReviewItem/ReviewItem";

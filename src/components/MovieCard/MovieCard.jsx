@@ -20,17 +20,14 @@ export default function MovieCard({
     height,
     width,
     borderRadius: radius,
-
     boxShadow:
       cardStyle === "popular-card"
         ? "0px 0px 10px 0px rgba(118, 118, 118, 0.75)"
         : null,
   };
 
-  const hyperRef = `/movieDetails/${id}`;
-
   return (
-    <Link className={cardStyle} to={hyperRef}>
+    <Link className={cardStyle} to={`/movieDetails/${id}`}>
       <div style={movieCardStyle}>
         <div className="movie-info-top">
           {movie && (

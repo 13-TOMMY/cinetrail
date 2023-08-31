@@ -10,8 +10,7 @@ export default function TopRatedMovies() {
       .get(
         `${import.meta.env.VITE_API_BASE_URL}top_rated?api_key=${
           import.meta.env.VITE_APP_API_KEY
-        }
-            `
+        } `
       )
       .then((res) => {
         setTopRatedMovies(res.data.results.slice(0, 10));
