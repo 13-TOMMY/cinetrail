@@ -1,17 +1,22 @@
 import React, { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ThemeContext } from "../contexts/ThemeContext";
-import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../contexts/UserContext";
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 
 import "./Header.css";
 import SearchResultItem from "./SearchResultItem/SearchResultItem";
 
 function Header() {
+  const navigateTo = useNavigate();
   const { darkMode, setDarkMode } = useContext(ThemeContext);
-  const navigate = useNavigate;
+  const { token, setToken, user, setUser } = useContext(UserContext);
+  console.log(user);
+
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [showProfile, setShowProfile] = useState(false);
 
   useEffect(() => {
     axios(
@@ -30,6 +35,13 @@ function Header() {
 
   const getUserQuery = (e) => {
     setQuery(e.target.value);
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    setUser("");
+    setToken("");
+    navigateTo("/");
   };
 
   return (
@@ -70,7 +82,32 @@ function Header() {
           </div>
         </div>
         <div>
-          <button className="create-account-btn" onClick={() => navigate('/signup')}>Create an Account</button>
+          {token ? (
+            <div className="profile-container">
+              <img
+                src={user?.image_url}
+                alt="avatar"
+                className="profile-img"
+                onClick={() => setShowProfile((prevState) => !prevState)}
+              />
+              <p>Welcome, {user?.username}!</p>
+              {showProfile && (
+                <div className="profile-options">
+                  <Link to={"/myFavorites"}>My Favorites</Link>
+                  <p className="logout" onClick={handleLogout}>
+                    Logout
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button
+              className="create-account-btn"
+              onClick={() => navigateTo("/signup")}
+            >
+              Create an Account
+            </button>
+          )}
         </div>
       </div>
     </div>

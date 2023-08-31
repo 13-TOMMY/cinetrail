@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { UserContext } from "../contexts/UserContext";
 import axios from "axios";
 
 import ReactPlayer from "react-player";
@@ -9,12 +10,31 @@ import Genres from "../components/Genres/Genres";
 import ReviewItem from "../components/ReviewItem/ReviewItem";
 
 export default function MovieDetails() {
+  const { user } = useContext(UserContext);
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
   const [trailerKey, setTrailerKey] = useState("");
   const [reviews, setReviews] = useState([]);
   const [totalNumReviews, setTotalNumReviews] = useState(0);
   const [numReviewsToDisplay, setNumReviewsToDisplay] = useState(3);
+  const [added, setAdded] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    axios
+      .post(`https://cinetrail-server.herokuapp.com/favoriteMovies/search`, {
+        user_id: user?._id,
+        tmdb_id: movie?.id,
+      })
+      .then((res) => {
+        console.log(res.data);
+        if (res.data !== null) {
+          setAdded(true);
+        }
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setLoaded(true));
+  }, []);
 
   useEffect(() => {
     axios(
@@ -46,12 +66,32 @@ export default function MovieDetails() {
       }`
     )
       .then((res) => {
-        console.log(res.data.results);
         setReviews(res.data.results);
         setTotalNumReviews(res.data.results.length);
       })
       .catch((err) => console.log(err));
   }, [movieId]);
+
+  const removeFromFavorites = () => {
+    axios
+      .delete(
+        `https://cinetrail-server.herokuapp.com/favoriteMovies/${user?._id}/${movie?.id}`
+      )
+      .then((res) => {
+        setAdded(false);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const addToFavorites = () => {
+    axios
+      .post(`https://cinetrail-server.herokuapp.com/favoriteMovies/`, {
+        user_id: user?._id,
+        movie_id: movie?.id,
+      })
+      .then((res) => setAdded(true))
+      .catch((err) => console.log(err));
+  };
   return (
     <div className="movie-details-container">
       <div className="trailer-container">
@@ -73,6 +113,15 @@ export default function MovieDetails() {
       <div className="details-container">
         <div className="title-container">
           <h1>{movie?.title}</h1>
+          {added && loaded ? (
+            <span className="remove-btn" onClick={removeFromFavorites}>
+              Remove from favorites
+            </span>
+          ) : (
+            <span className="add-btn" onClick={addToFavorites}>
+              Add to Favorites
+            </span>
+          )}
         </div>
         <div className="rating">
           {movie && (
@@ -111,7 +160,7 @@ export default function MovieDetails() {
         <div className="review-container">
           <p className="reviews-title">Reviews</p>
           {reviews.slice(0, numReviewsToDisplay).map((review) => (
-            <ReviewItem review={review} />
+            <ReviewItem review={review} key={review.id} />
           ))}
           {numReviewsToDisplay < totalNumReviews ? (
             <p

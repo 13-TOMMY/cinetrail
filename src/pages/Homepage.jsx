@@ -9,7 +9,7 @@ import "./styles.css";
 import "./movies.css";
 
 export default function Homepage() {
-  const { darkMode, setDarkMode } = useContext(ThemeContext);
+  const { darkMode } = useContext(ThemeContext);
 
   return (
     <div className={`homepage-container ${!darkMode && "home-light"}`}>

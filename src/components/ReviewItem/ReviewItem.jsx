@@ -4,10 +4,26 @@ import Avatar from "/avatar.jpeg";
 
 export default function ReviewItem({ review }) {
   const [showCompleteReview, setShowCompleteReview] = useState(false);
+  let imgSrc = "";
+  if (review?.author_details?.avatar_path !== null) {
+    if (
+      !review?.author_details?.avatar_path?.includes("https") &&
+      !review?.author_details?.avatar_path?.includes("http")
+    ) {
+      imgSrc = `${import.meta.env.VITE_API_BASE_IMAGE_URL}${
+        review?.author_details?.avatar_path
+      }`;
+    } else {
+      imgSrc = review?.author_details?.avatar_path?.slice(1);
+    }
+  } else {
+    imgSrc = Avatar;
+  }
+
   return (
     <div className="review">
       <div className="avatar-container">
-        <img src={Avatar} alt="avatar" className="avatar" />
+        <img src={imgSrc} alt="avatar" className="avatar" />
         <p>{review.author}</p>
       </div>
       {showCompleteReview ? (
