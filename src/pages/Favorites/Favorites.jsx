@@ -1,42 +1,39 @@
-import React, { useContext, useEffect, useState } from "react";
-import axios from "axios";
-import { UserContext } from "../../contexts/UserContext";
-import MovieCard from "../../components/MovieCard/MovieCard";
-import "./Favorites.css";
+import React,{useState,useEffect,useContext} from 'react'
+import MovieCard from '../../components/MovieCard/MovieCard';
+import './Favorites.css';
+import axios from 'axios';
+import {UserContext} from '../../contexts/UserContext';
 
-function Favorites() {
-  const { user, token } = useContext(UserContext);
-  const [favorites, setFavorites] = useState([]);
+function Favorites({serverUrl}) {
+    const [movies,setMovies]=useState([])
+    const {user,token}=useContext(UserContext) 
 
-  useEffect(() => {
-    axios(
-      `https://cinetrail-server.herokuapp.com/favoriteMovies/user/${user?._id}`
-    )
-      .then((res) => setFavorites(res.data.favorites))
-      .catch((err) => console.log(err));
-  }, [user]);
-  return (
-    <div className="favorites-container">
-      {token ? (
-        favorites.map((favorite) => {
-          return (
-            <MovieCard
-              radius="16px"
-              cardStyle="popular-card"
-              width="200px"
-              height="300px"
-              imgSrc={favorite.movie[0]?.poster_path}
-              key={favorite.movie[0]?.tmdb_id}
-              movie={favorite.movie[0]}
-              id={favorite.movie[0]?.tmdb_id}
-            />
-          );
-        })
-      ) : (
-        <p>Please sign in to see Movies</p>
-      )}
+useEffect(() => { 
+     axios.get(`${serverUrl}/favoriteMovies/user/${user?._id}`)
+     .then(res=>{ 
+      console.log(res.data)
+      setMovies(res.data.favorites)
+     })
+     .catch(err=>console.log(err)) 
+   
+}, [user])
+
+
+  
+  return ( 
+    <div className="favorites-container">  
+        {
+          token
+           ? movies.map(item=>{
+                return <MovieCard  radius={"16px"} cardStyle={"popular-card"} width={"200px"} 
+                height={"300px"} imageUrl={item.movie[0].poster_path} key={item.movie[0]._id} data={item.movie[0]}
+               />
+            }) 
+          : <p style={{color:"white"}}>Signin to save movies to your favorites.</p>
+        }
+
     </div>
-  );
+  )
 }
 
-export default Favorites;
+export default Favorites

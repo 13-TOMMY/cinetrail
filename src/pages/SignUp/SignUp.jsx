@@ -1,95 +1,80 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import "../users.css";
+import React,{useState,useEffect,useContext,CSSProperties} from 'react'
+import './SignUp.css'
+import axios from 'axios';
+import {UserContext} from '../../contexts/UserContext';
+import {ThemeContext} from '../../contexts/ThemeContext';
 
-export default function Signup() {
-  const navigate = useNavigate();
+import { Link } from 'react-router-dom';
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
-  const [signupSuccess, setSignupSuccess] = useState(false);
-  const [message, setMessage] = useState("");
 
-  const handleSignup = (e) => {
-    e.preventDefault();
-    axios
-      .post("https://cinetrail-server.herokuapp.com/users/signup", {
-        email,
-        password,
-        username,
-      })
-      .then((res) => {
-        console.log(res);
-        if (res.data.status === 409) {
-          setMessage("Sorry, this email is already in use!");
-        } else {
-          setSignupSuccess(true);
-          setEmail("");
-          setUsername("");
-          setPassword("");
+function SignUp({serverUrl}) { 
+ 
+    const {token}=useContext(UserContext)
+    const {darkMode,setDarkMode}=useContext(ThemeContext)  
+    const [email,setEmail]=useState(''); 
+    const [password,setPassword]=useState('');
+    const [username,setUsername]=useState('');
+    const [success,setSuccess]=useState(false)
+
+ 
+
+ 
+    
+
+    const handleSignUp=(e)=>{
+        e.preventDefault();
+        axios.post(`${serverUrl}/users/signup`,{email,password,username})
+        .then(res=>{
+            console.log(res.data)
+            if(res.data.status===409){
+                alert('There is another user with this email. Please sign up with a different email.')
+            }else{
+                setSuccess(true) 
+                setPassword('')
+                setEmail('')
+                setUsername('')
+            }
+        })
+        .catch(err=>console.log(err))
+    }
+ 
+  return ( 
+    <div className={darkMode ? "signup-container" : "signup-container signup-light"} >
+
+        {
+            token
+            ? <p>You are already loggedin.</p>
+            : <form className="signup-form" onSubmit={handleSignUp}>
+            <div className="title-container">
+                <h1>Sign Up</h1>
+                <p>Please fill in this form to create an account.</p>
+            </div> 
+            <div className={darkMode ? "input-wrapper" :"input-wrapper input-wrapper-light"}> 
+                <label htmlFor="email">Email</label>
+                <input value={email} type="email" placeholder="Enter Email" name="email" required onChange={(e)=>setEmail(e.target.value)}/>
+            </div>
+            <div className={darkMode ? "input-wrapper" :"input-wrapper input-wrapper-light"}>
+                <label htmlFor="psw">Password</label>
+                <input value={password} type="password" placeholder="Enter Password" name="psw" required onChange={(e)=>setPassword(e.target.value)}/>
+            </div>
+            <div className={darkMode ? "input-wrapper" :"input-wrapper input-wrapper-light"}>
+                <label htmlFor="username">Username</label>
+                <input value={username} type="text" placeholder="Enter Username" name="username" required onChange={(e)=>setUsername(e.target.value)}/>
+            </div>
+            <div className="button-container">
+                <button type="reset" className="cancelbtn">Cancel</button>
+                <button type="submit" className="signupbtn">Sign Up</button>
+            </div>
+            {
+                success 
+                ? <p className="success-message">Signed up successfully! <Link to="/signin">Signin</Link></p>
+                : <p className="signin-message">Already have an account? <Link to="/signin">Signin</Link></p>
+            }
+        </form>
         }
-      })
-      .catch((err) =>
-        setMessage("Sorry, something happened. Please try again later.")
-      );
-  };
-
-  return (
-    <div className="signup-container">
-      <form className="signup-form" onSubmit={handleSignup}>
-        <div className="title-container">
-          <h1>Sign Up</h1>
-          <p>Please fill in this form to create an account.</p>
-        </div>
-        <div className="input-wrapper">
-          <label htmlFor="">Email</label>
-          <input
-            type="email"
-            placeholder="Enter Email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="input-wrapper">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            placeholder="Enter Password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div className="input-wrapper">
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            placeholder="Enter Username"
-            name="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-          <div className="button-container">
-            <button type="reset" className="cancelbtn">
-              Cancel
-            </button>
-            <button type="submit" className="signupbtn">
-              Sign Up
-            </button>
-          </div>
-          {signupSuccess ? (
-            <p className="success-message">You signed up successfully!</p>
-          ) : (
-            <p>{message}</p>
-          )}
-        </div>
-      </form>
+        
     </div>
-  );
+  )
 }
+
+export default SignUp
