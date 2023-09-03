@@ -21,7 +21,7 @@ function App() {
           <Header baseUrl={baseUrl} apiKey={apiKey} />
           <Routes>
             <Route
-              path={"/movieDetails/:movieId"}
+              path={"/movieDetails/:movieid"}
               element={
                 <MovieDetails
                   serverUrl={serverUrl}
